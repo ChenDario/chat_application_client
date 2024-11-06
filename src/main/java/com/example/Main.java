@@ -47,7 +47,7 @@ public class Main {
         print_comands();
         // Loop per inviare messaggi
         while (true) { 
-            System.out.println("Enter the command to execute or the message you wish to send");
+            System.out.println("Enter the command to execute or the message you wish to send: ");
             message = scan.nextLine();
             // Invia il messaggio al server
             out.writeBytes(message + "\n");

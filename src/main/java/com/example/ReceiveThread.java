@@ -20,7 +20,7 @@ public class ReceiveThread extends Thread{
             try {
                 String message;
                 while ((message = in.readLine()) != null) {
-                    System.out.println("Messaggio ricevuto: " + message);
+                    status_codes(message, this.in);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -28,10 +28,26 @@ public class ReceiveThread extends Thread{
         }
     }
 
-    public void status_codes(String server_response){
+    public void status_codes(String server_response,BufferedReader in){
         try {
+            String messaggio = "";
             //Mancano ancora diversi messaggi di errore
             switch(server_response){
+                
+                case "RCV_100":
+                    messaggio = in.readLine();
+                    System.out.println("Message " + messaggio);
+                    break;
+                
+                case "SUCC_200":
+                    messaggio = in.readLine();
+                    System.out.println(messaggio);
+                    break;
+
+                case "SUCC_201":
+                    System.out.println("Messaggio inviato con successo");
+                    break;
+
                 case "ERROR_404":
                     System.out.println("ERROR - - REQUEST NOT FOUND");
                     break;
@@ -45,11 +61,11 @@ public class ReceiveThread extends Thread{
                     break;
 
                 case "ERROR_405":
-                    
+                    System.out.println("Request Not Found");
                     break;
 
                 case "ERROR_500":
-                    
+                    System.out.println("Internal Server Error");
                     break;
 
                 default: 
