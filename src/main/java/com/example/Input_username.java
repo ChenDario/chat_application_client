@@ -23,10 +23,10 @@ public class Input_username {
         do {
             //Inserimento dell'username
             System.out.println("(Sono consentiti tutti i caratteri dell'alfabeto, che saranno case sensitive, i numeri e i 3 caratteri speciali - . _)\nInserire un'username valido: ");
-            username = scanner.nextLine();
+            this.username = scanner.nextLine();
 
             //Manda al server l'username per il controllo 
-            out.writeBytes(username + "\n");
+            out.writeBytes(this.username + "\n");
             ans = in.readLine();
             //Se contiene un messaggio di errore allora continua il loop
             if(ans.contains("ERROR") || ans.contains(">") || ans.contains("<")){
@@ -38,7 +38,7 @@ public class Input_username {
             username_result(ans);
         } while (!valido);
 
-        return username;
+        return this.username;
     }
 
     public void username_result(String ans){
@@ -48,7 +48,7 @@ public class Input_username {
             case "ERROR_500" -> System.out.println("Internal Server Error");
             case "ERROR_400" -> System.out.println("Invalid Character present, RETRY");
             case "ERROR_402" -> System.out.println("Username already taken, RETRY");
-            case "SUCC_200" -> System.out.println("Welcome to our team" + this.username + "!!");
+            case "SUCC_200" -> System.out.println("Welcome to our team " + this.username + "!!");
             default -> System.out.println(" - - ERROR - - ");
         }
     }

@@ -28,10 +28,11 @@ public class ReceiveThread extends Thread{
         }
     }
 
-    public void status_codes(String server_response,BufferedReader in){
+    public void status_codes(String server_response, BufferedReader in){
         try {
             String messaggio = "";
-            //Mancano ancora diversi messaggi di errore
+
+            //Mancano ancora diversi messaggi di errore e risposta
             switch(server_response){
                 
                 case "RCV_100":
@@ -48,8 +49,13 @@ public class ReceiveThread extends Thread{
                     System.out.println("Messaggio inviato con successo");
                     break;
 
+                case "MENU_200":
+                    //Print until he gave the command to stop
+                    print_menu(in);
+                    break;
+
                 case "ERROR_404":
-                    System.out.println("ERROR - - REQUEST NOT FOUND");
+                    System.out.println("- - ERROR - - REQUEST NOT FOUND");
                     break;
                 
                 case "ERROR_404_G":
@@ -77,6 +83,18 @@ public class ReceiveThread extends Thread{
             // TODO: handle exception
             System.out.println("- - ERROR - - ");
         }
+    }
+
+    public void print_menu(BufferedReader in) throws IOException{
+        String messaggio = "";
+        
+        do {
+            messaggio = in.readLine();
+
+            if(!messaggio.equals("MENU_300"))
+                System.out.println(messaggio);
+
+        } while (!messaggio.equals("MENU_300"));
     }
 
 }
