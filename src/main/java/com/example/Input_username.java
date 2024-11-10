@@ -47,6 +47,7 @@ public class Input_username {
             case "<" -> System.out.println("Username troppo corto, RETRY");
             case "ERROR_500" -> System.out.println("Internal Server Error");
             case "ERROR_400" -> System.out.println("Invalid Character present, RETRY");
+            case "ERROR_401" -> System.out.println("Blank Username, RETRY");
             case "ERROR_402" -> System.out.println("Username already taken, RETRY");
             case "SUCC_200" -> System.out.println("Welcome to our team " + this.username + "!!");
             default -> System.out.println(" - - ERROR - - ");
