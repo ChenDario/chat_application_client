@@ -15,9 +15,20 @@ public class Main {
     
     public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
         HashMap<String, String> group_codes = new HashMap<>();
+        
+        //colori e stili per i testi
+        String RED_TEXT = "\033[31m";
+        String GREEN_TEXT = "\033[32m";
+        String YELLOW_TEXT = "\033[33m";
+        String MAGENTA_TEXT = "\033[35m";
+        String BLUE_TEXT = "\033[36m";
+        String BOLD_Text = "\033[1m";
+
+        String RESET_TEXT = "\033[0m";
+
 
         Socket socket = new Socket("localhost", 3000);
-        System.out.println("Il client si è collegato");
+        System.out.println(YELLOW_TEXT + "Il client si è collegato" + RESET_TEXT);
         
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
@@ -50,6 +61,17 @@ public class Main {
 
         System.out.println("Enter /show_command to print all the available commands: ");
 
+        //colori e stili per i testi
+        String RED_TEXT = "\033[31m";
+        String GREEN_TEXT = "\033[32m";
+        String YELLOW_TEXT = "\033[33m";
+        String MAGENTA_TEXT = "\033[35m";
+        String BLUE_TEXT = "\033[36m";
+        String BOLD_Text = "\033[1m";
+
+        String RESET_TEXT = "\033[0m";
+
+
         // Loop per inviare messaggi
         while (true) { 
             System.out.println("Enter the command to execute or the message you wish to send: ");
@@ -59,7 +81,7 @@ public class Main {
 
             // Condizione di uscita
             if (message.equalsIgnoreCase("exit")) {
-                System.out.println("Disconnessione...");
+                System.out.println(YELLOW_TEXT + "Disconnessione..." + RESET_TEXT);
                 break;
             }
             //Questo sleep permette di far eseguire la richiesta e farla stampare prima che ricominci il loop (cosa visiva)

@@ -6,6 +6,17 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class ReceiveThread extends Thread{
+    
+    //colori e stili per i testi
+    String RED_TEXT = "\033[31m";
+    String GREEN_TEXT = "\033[32m";
+    String YELLOW_TEXT = "\033[33m";
+    String MAGENTA_TEXT = "\033[35m";
+    String BLUE_TEXT = "\033[36m";
+    String BOLD_Text = "\033[1m";
+
+    String RESET_TEXT = "\033[0m";
+
     private BufferedReader in;
     private DataOutputStream out;
     private HashMap<String, String> group_codes;
@@ -71,12 +82,12 @@ public class ReceiveThread extends Thread{
                     break;    
 
                 case "CL_200": //messaggio di conferma per il gruppo creato
-                    System.out.println("Group Created");
+                    System.out.println(GREEN_TEXT + "Group Created" + RESET_TEXT);
                     System.out.println("Enter /join_G@ group_name - username1, username2...... To add the users to the group");
                     break;
 
                 case "SUCC_200": //Richiesta completata con successo
-                    System.out.println("Richiesta completata con successo");
+                    System.out.println(GREEN_TEXT + "Richiesta completata con successo" + RESET_TEXT);
                     break;
                 
                 case "SRV_200": //risposta del server
@@ -97,11 +108,11 @@ public class ReceiveThread extends Thread{
                     break;
 
                 case "ERROR_400": //errore carattere non valido
-                    System.out.println("Invalid Character present, RETRY");
+                    System.out.println(RED_TEXT + "Invalid Character present, RETRY" + RESET_TEXT);
                     break;
 
                 case "ERROR_403": //Utente già presente
-                    System.out.println("Utente già presente");
+                    System.out.println(RED_TEXT + "Utente già presente" + RESET_TEXT);
                     break;
 
                 case "ERROR_404": //not found
@@ -117,7 +128,7 @@ public class ReceiveThread extends Thread{
                     break;
 
                 case "ERROR_405":
-                    System.out.println("Request Not Found");
+                    System.out.println(RED_TEXT + "Request Not Found" + RESET_TEXT);
                     break;
 
                 case "ERROR_406": 
