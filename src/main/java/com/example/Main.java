@@ -46,7 +46,8 @@ public class Main {
 
     public static void sendMessage(BufferedReader in, DataOutputStream out, Scanner scan)
             throws IOException, InterruptedException {
-        String message;
+
+        String message = "";
 
         System.out.println("Enter /show_command to print all the available commands: ");
 
@@ -76,22 +77,64 @@ public class Main {
              * "/join_G@ To add a user to the groupchat",
              * "Enter EXIT to exit"
              */
-            
-            boolean x = false; //in caso si debba ripetere il ciclo
+
+            boolean x = false; // in caso si debba ripetere il ciclo
             do {
                 x = false;
-                
-                // tutti print out con le opzioni
-                System.out.println("1) inviare un messaggio ad un altro utente"); //@username “message”
-                System.out.println("2) inviare un messaggio ad un gruppo"); //G@group_name “message”
-                System.out.println("3) inviare un messaggio a tutti gli utenti registrati"); //@All “message”
-                System.out.println("4) lista degli utenti attivi"); //@_list
-                //altri
+
+                stampaMenu();
 
                 String scelta = scan.nextLine();
-                
+
+                /*to do list:
+                 * riempire i case
+                 * verificare che non ci siano conflitti nelle richieste
+                 * opsionale: guardare che risposte mi da
+                 * provare a dare la possibilità di far rimanere lo stesso utente destinatario 
+                 */
+
                 switch (scelta) {
+                    case "0": // Disconnessione...
+                        message = "exit";
+                        break;
+
                     case "1":
+
+                        break;
+
+                    case "2":
+
+                        break;
+
+                    case "3":
+
+                        break;
+
+                    case "4":
+
+                        break;
+
+                    case "5":
+
+                        break;
+
+                    case "6":
+
+                        break;
+
+                    case "7":
+
+                        break;
+
+                    case "8":
+
+                        break;
+
+                    case "9":
+
+                        break;
+
+                    case "10":
 
                         break;
 
@@ -105,7 +148,8 @@ public class Main {
 
             // System.out.println("Enter the command to execute or the message you wish to
             // send: ");
-            message = scan.nextLine(); // LEGGE IL MESSAGGIO DA TEERMINALE //DA TOGLERE
+            // message = scan.nextLine(); // LEGGE IL MESSAGGIO DA TEERMINALE //DA TOGLERE
+            // //VECCHIO/show_command
 
             // da qui in poi uguale
             // Invia il messaggio al server
@@ -120,6 +164,24 @@ public class Main {
             // ricominci il loop (cosa visiva)
             Thread.sleep(1000);
         }
+    }
+
+    public static void stampaMenu() { // funzione per stampare il menu
+        // tutti print out con le opzioni
+        System.out.println("Scrivi il numero corrispondente all' azione che vorresti fare");
+        System.out.println("0) uscire dall' aplicazione"); // exit
+        System.out.println("1) Inviare un messaggio ad un altro utente"); // @username “message”
+        System.out.println("2) Inviare un messaggio ad un gruppo"); // G@group_name “message”
+        System.out.println("3) Inviare un messaggio a tutti gli utenti registrati"); // @All “message”
+        System.out.println("4) Lista degli utenti attivi"); // @_list
+        System.out.println("5) lista dei gruppi attivi"); // G@_list
+        System.out.println("6) Lista dei membri di un gruppo"); // /users_group nome_gruppo
+        System.out.println("7) Lista di tutte le chat attive (sia gruppi e sia private)"); // /list_all
+        System.out.println("8) Creazione di una chat di gruppo tra 3 o più utenti"); // /create_group “group_name”
+        System.out.println("9) Per aggiungere un utente ad un gruppo"); // /join_G@ group_name - username1, username2…..
+        System.out.println("10) Per uscire dal gruppo"); // /left_G@ group_name
+        // System.out.println("11) lista degli utenti attivi"); // /show_command //non
+        // servirebbe quindi bho
     }
 
     // Simple Chat(Client - Server) Communication, hours spent coding: 18 (dario)
