@@ -98,44 +98,77 @@ public class Main {
                         message = "exit";
                         break;
 
-                    case "1":
-
+                    case "1": //Inviare un messaggio ad un altro utente" @username “message”
+                        System.out.println("Scrivi il nome utente a cui inviare il messaggio");
+                        String nomeUtenteEsistente = scan.nextLine();
+                        message = "@" + nomeUtenteEsistente + " ";
+                        System.out.println("Scrivi il messaggio: ");
+                        String text1 = scan.nextLine();
+                        message = message + text1;
                         break;
 
-                    case "2":
-
+                    case "2": //Inviare un messaggio ad un gruppo G@group_name “message” 
+                        System.out.println("Scrivi il nome del gruppo a cui inviare il messaggio");
+                        String GruppoEsistente = scan.nextLine();
+                        message = "G@" + GruppoEsistente + " ";
+                        System.out.println("Scrivi il messaggio: ");
+                        String text2 = scan.nextLine();
+                        message = message + text2;
+                        //System.out.println(message);
                         break;
 
-                    case "3":
-
+                    case "3": //Inviare un messaggio a tutti gli utenti registrati // @All “message”
+                        System.out.println("Scrivi il messaggio da inviare a tutti: ");
+                        String messaggioTutti = scan.nextLine();
+                        message = "@All " + messaggioTutti;
                         break;
 
-                    case "4":
-
+                    case "4": //Lista degli utenti attivi @_list
+                        message = "@_list";
                         break;
 
-                    case "5":
-
+                    case "5": //lista dei gruppi attivi G@_list
+                        message = "G@_list";
                         break;
 
-                    case "6":
-
+                    case "6": //Lista dei membri di un gruppo /users_group nome_gruppo
+                        System.out.println("Digita il nome del gruppo per vedere i partecipanti");
+                        String gruppoEsistente = scan.nextLine();
+                        message = "/users_group " + gruppoEsistente;
                         break;
 
-                    case "7":
-
+                    case "7": //Lista di tutte le chat attive (sia gruppi e sia private) /list_all
+                        message = "/list_all";
                         break;
 
-                    case "8":
-
+                    case "8": //Creazione di una chat di gruppo tra 3 o più utenti /create_group “group_name”
+                        System.out.println("Digitare il nome del gruppo da creare");
+                        String nomeGruppoDaCreare = scan.nextLine();
+                        message = "/create_group " + nomeGruppoDaCreare;
                         break;
 
-                    case "9":
-
+                    case "9": //Per aggiungere un utente ad un gruppo /join_G@ group_name - username1, username2…..
+                        System.out.println("Inserisci il nome del gruppo da qui vuoi aggiungere un altro utente");
+                        String nomeGruppoEsistente = scan.nextLine();
+                        message = "/join_G@ " + nomeGruppoEsistente + " -";
+                        String rispostaSi;
+                        do {
+                            System.out.println("Inserisci il nome utente da inserire");
+                            String nomeUtente = scan.nextLine();
+                            message = message + " " + nomeUtente + ","; //aggancia ogni volta utente nuovo
+                            System.out.println("Vuoi inserire un altro utente? digitare 'si' se la risposta è affermativa");
+                            rispostaSi = scan.nextLine();
+                        } while (rispostaSi.equalsIgnoreCase("si"));
+                        if (message.length() > 0 && message.charAt(message.length() - 1) == ',') { //toglere l'ultimo carrattere perchè è una ,
+                            message = message.substring(0, message.length() - 1);
+                        } //dovrebbe essere a posto
+                        //System.out.println(message);
                         break;
 
-                    case "10":
-
+                    case "10": //10) Per uscire dal gruppo /left_G@ group_name
+                        System.out.println("Inserisci il nome del gruppo da qui vuoi uscire");
+                        String nomeEliminabile = scan.nextLine();
+                        message = "/left_G@ " + nomeEliminabile;
                         break;
 
                     default:
@@ -170,7 +203,7 @@ public class Main {
         // tutti print out con le opzioni
         System.out.println("Scrivi il numero corrispondente all' azione che vorresti fare");
         System.out.println("0) uscire dall' aplicazione"); // exit
-        System.out.println("1) Inviare un messaggio ad un altro utente"); // @username “message”
+        System.out.println("1) Inviare un messaggio ad un altro utente"); // @username “message” 
         System.out.println("2) Inviare un messaggio ad un gruppo"); // G@group_name “message”
         System.out.println("3) Inviare un messaggio a tutti gli utenti registrati"); // @All “message”
         System.out.println("4) Lista degli utenti attivi"); // @_list
