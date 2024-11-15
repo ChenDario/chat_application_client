@@ -5,16 +5,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class ReceiveThread extends Thread{
+public class ReceiveThread extends Thread {
     
-    //colori e stili per i testi
+    // Colori e stili per i testi
     String RED_TEXT = "\033[31m";
     String GREEN_TEXT = "\033[32m";
     String YELLOW_TEXT = "\033[33m";
     String MAGENTA_TEXT = "\033[35m";
     String BLUE_TEXT = "\033[36m";
-    String BOLD_Text = "\033[1m";
-
+    String BOLD_TEXT = "\033[1m";
     String RESET_TEXT = "\033[0m";
 
     private BufferedReader in;
@@ -22,108 +21,120 @@ public class ReceiveThread extends Thread{
     private HashMap<String, String> group_codes;
     private volatile boolean running = true; 
 
-    public ReceiveThread(BufferedReader in, DataOutputStream out, HashMap<String, String> group_codes){
+    public ReceiveThread(BufferedReader in, DataOutputStream out, HashMap<String, String> group_codes) {
         this.in = in;
         this.out = out;
         this.group_codes = group_codes;
     }
 
     @Override
-    public void run(){
-        //Il Thread deve sempre stare in ascolto per possibili messaggi
-        while(running){
+    public void run() {
+        // Il Thread deve sempre stare in ascolto per possibili messaggi
+        while (running) {
             try {
-                String message = "";
-                while (!message.equals("Exit") || running) {
-                    message = in.readLine();
-                    status_codes(message, this.in);
+                String message = in.readLine(); // Leggi il messaggio
+
+                if (message == null || message.equals("Exit")) { 
+                    System.out.println("Client disconnesso.");
+                    stopThread(); // blocca il thread
+                    break; // Esce dal ciclo
                 }
+                
+                // Elabora il messaggio ricevuto
+                status_codes(message, this.in);
+
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Errore nella lettura dal server: " + e.getMessage());
+                stopThread(); // Arresta il thread in caso di errore
             }
+        }
+
+        // Chiude input & output quando il thread si ferma
+        try {
+            in.close();
+            out.close();
+        } catch (IOException e) {
+            System.err.println("Errore nella chiusura delle risorse: " + e.getMessage());
         }
     }
 
-    public void stopThread(){
+    public void stopThread() {
         running = false; 
     }
 
-    public void status_codes(String server_response, BufferedReader in){
+    public void status_codes(String server_response, BufferedReader in) {
         try {
             String messaggio = "";
 
-            //Mancano ancora diversi messaggi di errore e risposta
-            switch(server_response){
-                
-                case "RCV_100": //ricezione de3l mesaggio (invio messaggio da parte di un altro utente)
+            // Mancano ancora diversi messaggi di errore e risposta
+            switch (server_response) {
+                case "RCV_100": // Ricezione del messaggio (invio messaggio da parte di un altro utente)
                     messaggio = in.readLine();
                     System.out.println("Message " + messaggio);
                     break;
 
-                case "RCV_200": //conferma creazione di un gruppo
-                    //Read the group_name and the code to save it in a HashMap
+                case "RCV_200": // Conferma creazione di un gruppo
+                    // Leggi il nome del gruppo e il codice per salvarli in una HashMap
                     String group_name = in.readLine();
                     String group_code = in.readLine();
 
-                    //HashMap contenente il nome del gruppo e il suo relativo codice
+                    // HashMap contenente il nome del gruppo e il suo relativo codice
                     this.group_codes.put(group_name, group_code);
-                    //System.out.println("Group Name: " + group_name + " Group Code: " + group_code);
-                    System.out.println("Grupo creato. Nome: " + group_name);
+                    System.out.println("Gruppo creato. Nome: " + group_name);
                     break;
 
                 case "RMV_200":
-                    //leggo nome e codice gruppo
+                    // Leggo nome e codice gruppo
                     String grp_name = in.readLine();
                     String grp_code = in.readLine();
 
-                    this.group_codes.remove(grp_name, grp_code); //rimozione
+                    this.group_codes.remove(grp_name, grp_code); // Rimozione
                     System.out.println("Uscito dal gruppo: " + grp_name);
-
                     break;    
 
-                case "CL_200": //messaggio di conferma per il gruppo creato
+                case "CL_200": // Messaggio di conferma per il gruppo creato
                     System.out.println(GREEN_TEXT + "Group Created" + RESET_TEXT);
                     System.out.println("Enter /join_G@ group_name - username1, username2...... To add the users to the group");
                     break;
 
-                case "SUCC_200": //Richiesta completata con successo
+                case "SUCC_200": // Richiesta completata con successo
                     System.out.println(GREEN_TEXT + "Richiesta completata con successo" + RESET_TEXT);
                     break;
-                
-                case "SRV_200": //risposta del server
+
+                case "SRV_200": // Risposta del server
                     messaggio = in.readLine();
                     System.out.println(messaggio);
                     break;
 
-                case "SUCC_201": //conferma dell'invio del messaggio
+                case "SUCC_201": // Conferma dell'invio del messaggio
                     System.out.println("Messaggio inviato con successo");
                     break;
 
-                case "MENU_200": //menu
+                case "MENU_200": // Menu
                     print_menu(in);
                     break;
 
-                case "GRP_INFO": //vieni aggiunto in un gruppo
+                case "GRP_INFO": // Vieni aggiunto in un gruppo
                     group_add(in);
                     break;
 
-                case "ERROR_400": //errore carattere non valido
+                case "ERROR_400": // Errore carattere non valido
                     System.out.println(RED_TEXT + "Invalid Character present, RETRY" + RESET_TEXT);
                     break;
 
-                case "ERROR_403": //Utente già presente
+                case "ERROR_403": // Utente già presente
                     System.out.println(RED_TEXT + "Utente già presente" + RESET_TEXT);
                     break;
 
-                case "ERROR_404": //not found
+                case "ERROR_404": // Not found
                     System.out.println("- - ERROR - - REQUEST NOT FOUND");
                     break;
-                
-                case "ERROR_404_G": //gruppo not foud
+
+                case "ERROR_404_G": // Gruppo not found
                     System.out.println("Group NOT FOUND");
                     break;
-                
-                case "ERROR_404_P": //chat not foud
+
+                case "ERROR_404_P": // Chat not found
                     System.out.println("User NOT FOUND");
                     break;
 
@@ -141,39 +152,35 @@ public class ReceiveThread extends Thread{
 
                 default: 
                     System.out.println("- - ERROR PROCESSING THE RESPONSE FROM THE SERVER - - ");
-                    //Sout for debug
-                    System.out.println("Server: " + server_response);
+                    System.out.println("Server: " + server_response); // Debug
                     break;
-
             }
         } catch (Exception e) {
-            // TODO: handle exception
             System.out.println("- - ERROR - - ");
         }
     }
 
-    public void print_menu(BufferedReader in) throws IOException{
+    public void print_menu(BufferedReader in) throws IOException {
         String messaggio = "";
-        
+
         do {
             messaggio = in.readLine();
 
-            if(!messaggio.equals("MENU_300"))
+            if (!messaggio.equals("MENU_300"))
                 System.out.println(messaggio);
 
         } while (!messaggio.equals("MENU_300"));
     }
 
-    //When someone else add you to a group
-    public void group_add(BufferedReader in) throws IOException{
-        //Read the group_name and the code to save it in a HashMap
+    // Quando qualcuno ti aggiunge a un gruppo
+    public void group_add(BufferedReader in) throws IOException {
+        // Leggi il nome del gruppo e il codice per salvarli in una HashMap
         String group_name = in.readLine();
         String group_code = in.readLine();
 
-        //Aggiungi all HashMap il nome del gruppo e il suo relativo codice
+        // Aggiungi all'HashMap il nome del gruppo e il suo relativo codice
         this.group_codes.put(group_name, group_code);
 
         System.out.println("You have been added to the group: " + group_name);
     }
-
 }
