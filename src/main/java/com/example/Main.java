@@ -13,11 +13,11 @@ import java.util.Scanner;
 public class Main {
 
     private static String username;
-    private static Encryption safe_message;
-    private static HashMap<String, String> users_key = new HashMap<>();
+    private static Encryption safe_message = new Encryption();
 
     public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
         HashMap<String, String> group_codes = new HashMap<>();
+        HashMap<String, String> users_key = new HashMap<>();
 
         
         //colori e stili per i testi
@@ -48,14 +48,14 @@ public class Main {
         //Generazione delle chiavi pubbliche e private
         safe_message.generateKeys(1024);
         String publicKey = safe_message.getPublicKey();
-        System.out.println("Chiave pubblica" + publicKey);
+        //Invio della chiave privata al server per renderlo nota a tutti
         out.writeBytes("PublicKey " + publicKey + "\n");
 
         // Avvia la ricezione dei messaggi
-        ReceiveThread r = new ReceiveThread(in, out, group_codes, safe_message);
+        ReceiveThread r = new ReceiveThread(in, out, group_codes, safe_message, users_key);
         r.start();
 
-        sendMessage(in, out, scanner);
+        sendMessage(in, out, scanner, users_key);
 
         // Se per qualche motivo esce dal loop, significa che sta lasciando la chat
         in.close();
@@ -65,7 +65,7 @@ public class Main {
 
     }
 
-    public static void sendMessage(BufferedReader in, DataOutputStream out, Scanner scan) throws IOException, InterruptedException {
+    public static void sendMessage(BufferedReader in, DataOutputStream out, Scanner scan, HashMap<String, String> users_key) throws IOException, InterruptedException {
         Thread.sleep(500);
 
         String message = "";
@@ -102,13 +102,13 @@ public class Main {
                         String nomeUtenteEsistente = scan.nextLine();
                         //Da inserire se l'utente inserito esiste o meno(Controllo da eseguire subito)
                         //Controllo se ho la public key dell'utente di destinazione, in caso negativo la richiedo subito
-                        findPublicKey(nomeUtenteEsistente, out);
+                        findPublicKey(nomeUtenteEsistente, out, users_key);
                         message = "@" + nomeUtenteEsistente + " ";
                         //Inserimento messaggio
                         System.out.println("Scrivi il messaggio: ");
                         String text1 = scan.nextLine();
                         //Codifica del messaggio
-                        message += encrypt_message(message, nomeUtenteEsistente);
+                        message += encrypt_message(text1, nomeUtenteEsistente, users_key);
                         break;
 
                     case "2": //Inviare un messaggio ad un gruppo G@group_name “message” 
@@ -199,21 +199,21 @@ public class Main {
         }
     }
 
-    public static String encrypt_message(String message, String user){
+    public static String encrypt_message(String message, String user, HashMap<String, String> users_key){
         String public_key = users_key.get(user);
         String[] key_dest = public_key.split(" : ");
 
         return safe_message.encrypt(message, new BigInteger(key_dest[0]), new BigInteger(key_dest[1]));
     }
 
-    public static void findPublicKey(String user, DataOutputStream out) throws IOException{
-        if(users_key.get(user) != null)
+    public static void findPublicKey(String user, DataOutputStream out, HashMap<String, String> users_key) throws IOException{
+        if(users_key.get(user) == null)
             getPublicKey(user, out);
         //Se non ha la chiave la richiede al server
     }
 
     public static void getPublicKey(String user_dest, DataOutputStream out) throws IOException{
-        out.writeBytes("/RequestKey " + user_dest);
+        out.writeBytes("/request_key " + user_dest);
     }
 
     public static void stampaMenu() { // funzione per stampare il menu

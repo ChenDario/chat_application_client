@@ -22,13 +22,14 @@ public class ReceiveThread extends Thread {
     private HashMap<String, String> group_codes;
     private volatile boolean running = true; 
     private Encryption safe_message;
-    private HashMap<String, String> users_publickey = new HashMap<>();
+    private HashMap<String, String> users_publickey;
 
-    public ReceiveThread(BufferedReader in, DataOutputStream out, HashMap<String, String> group_codes, Encryption safe_message) {
+    public ReceiveThread(BufferedReader in, DataOutputStream out, HashMap<String, String> group_codes, Encryption safe_message, HashMap<String, String> users_key) {
         this.in = in;
         this.out = out;
         this.group_codes = group_codes;
         this.safe_message = safe_message;
+        this.users_publickey = users_key;
     }
 
     @Override
@@ -170,13 +171,16 @@ public class ReceiveThread extends Thread {
         }
     }
 
-    public void saveKey() throws IOException {
+    synchronized public void saveKey() throws IOException {
         String user = in.readLine();
         String key = in.readLine();
 
         //Salvataggio della chiave pubblica dell'utente di destinazione
         users_publickey.put(user, key);
 
+        for(String i : users_publickey.keySet()){
+            System.out.println("Utente: " + i + "- Chiave Pubblica: " + users_publickey.get(i));
+        }
     }
 
     //Decrypt the message
@@ -187,7 +191,7 @@ public class ReceiveThread extends Thread {
         String encrypted_message = received_message[1].trim(); // Rimuovi eventuali spazi all'inizio o alla fine
 
         //              Nome utente                 Messaggio decifrato
-        return "From" + received_message[0] + ": " + safe_message.decrypt(new BigInteger(encrypted_message));
+        return "From " + received_message[0] + ": " + safe_message.decrypt(new BigInteger(encrypted_message));
     }
 
     // Quando qualcuno ti aggiunge a un gruppo

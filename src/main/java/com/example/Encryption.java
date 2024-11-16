@@ -9,6 +9,11 @@ public class Encryption {
     private BigInteger d; // Esponente privato
     private BigInteger n; // Modulo
 
+    //Costruttore vuoto
+    public Encryption(){
+
+    }
+
     public void generateKeys(int bitLength) {
         Random rand = new Random();
 
