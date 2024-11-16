@@ -52,32 +52,8 @@ public class Main {
 
         // Loop per inviare messaggi
         while (true) {
-            /*
-             * String[] commands = {
-             * //Sending a message
-             * "- - TO SEND A MESSAGE (no need for the \"\" in the actual command) - - ",
-             * "@nome_username \"message\" to send a message to user nome_username",
-             * "@All \"message\" to send a message to everyone",
-             * "G@group_name \"message\" to send a message to group group_name",
-             * //Get Lists
-             * "- - LISTS - - ",
-             * "@_list show all available private chats",
-             * "G@_list show all available groupchats",
-             * "/list_all to show both the available private chats and groupchats",
-             * "/show_command Print all the executable commands",
-             * //Create group or add user
-             * "- - GROUP CREATION / USER FRIENDSHIP AND OTHERS- - ",
-             * "/create_group \"group_name\" to create a group with group_name",
-             * "/add_user \"username\" to add user with username",
-             * "/accept Accept the last friendship request",
-             * "/accept_all Accept all friendship requests",
-             * "/reject Reject the last friendship request",
-             * "/reject_all Reject all friendship requests",
-             * "/join_G@ To add a user to the groupchat",
-             * "Enter EXIT to exit"
-             */
             
-            boolean x = false; //in caso si debba ripetere il ciclo
+            boolean x; //in caso si debba ripetere il ciclo
             do {
                 x = false;
                 
