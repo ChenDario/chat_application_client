@@ -3,6 +3,7 @@ package com.example;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.HashMap;
 
 public class ReceiveThread extends Thread {
@@ -20,11 +21,14 @@ public class ReceiveThread extends Thread {
     private DataOutputStream out;
     private HashMap<String, String> group_codes;
     private volatile boolean running = true; 
+    private Encryption safe_message;
+    private HashMap<String, String> users_publickey = new HashMap<>();
 
-    public ReceiveThread(BufferedReader in, DataOutputStream out, HashMap<String, String> group_codes) {
+    public ReceiveThread(BufferedReader in, DataOutputStream out, HashMap<String, String> group_codes, Encryption safe_message) {
         this.in = in;
         this.out = out;
         this.group_codes = group_codes;
+        this.safe_message = safe_message;
     }
 
     @Override
@@ -68,9 +72,15 @@ public class ReceiveThread extends Thread {
 
             // Mancano ancora diversi messaggi di errore e risposta
             switch (server_response) {
+                //Ricezione e salvattaggio delle chiavi pubbliche degli altri utenti
+                case "PUBLIC_KEY":
+                    saveKey();
+                    System.out.println("Chiave pubblica memorizzata");
+                    break;
+
                 case "RCV_100": // Ricezione del messaggio (invio messaggio da parte di un altro utente)
                     messaggio = in.readLine();
-                    System.out.println("Message " + messaggio);
+                    System.out.println(decrypt_message(messaggio));
                     break;
 
                 case "RCV_200": // Conferma creazione di un gruppo
@@ -88,8 +98,8 @@ public class ReceiveThread extends Thread {
                     String grp_name = in.readLine();
                     String grp_code = in.readLine();
 
-                    this.group_codes.remove(grp_name, grp_code); // Rimozione
-                    System.out.println("Uscito dal gruppo: " + grp_name);
+                    this.group_codes.remove(grp_name, grp_code); // Rimozione dal hashMap del gruppo
+                    System.out.println("Uscito dal gruppo: " + grp_name + " riuscita");
                     break;    
 
                 case "CL_200": // Messaggio di conferma per il gruppo creato
@@ -108,10 +118,6 @@ public class ReceiveThread extends Thread {
 
                 case "SUCC_201": // Conferma dell'invio del messaggio
                     System.out.println("Messaggio inviato con successo");
-                    break;
-
-                case "MENU_200": // Menu
-                    print_menu(in);
                     break;
 
                 case "GRP_INFO": // Vieni aggiunto in un gruppo
@@ -145,6 +151,10 @@ public class ReceiveThread extends Thread {
                 case "ERROR_406": 
                     System.out.println("All available user added to the group");
                     break;
+                
+                case "ERROR_407": 
+                    System.out.println("Unico utente presente, messaggio di broadcast fallito");
+                    break;
 
                 case "ERROR_500":
                     System.out.println("Internal Server Error");
@@ -160,16 +170,24 @@ public class ReceiveThread extends Thread {
         }
     }
 
-    public void print_menu(BufferedReader in) throws IOException {
-        String messaggio = "";
+    public void saveKey() throws IOException {
+        String user = in.readLine();
+        String key = in.readLine();
 
-        do {
-            messaggio = in.readLine();
+        //Salvataggio della chiave pubblica dell'utente di destinazione
+        users_publickey.put(user, key);
 
-            if (!messaggio.equals("MENU_300"))
-                System.out.println(messaggio);
+    }
 
-        } while (!messaggio.equals("MENU_300"));
+    //Decrypt the message
+    public String decrypt_message(String message){
+        String x = message.substring(5);// Rimuove "from " per ottenere solo la parte che ci interessa
+        String[] received_message = x.split(":", 2);
+
+        String encrypted_message = received_message[1].trim(); // Rimuovi eventuali spazi all'inizio o alla fine
+
+        //              Nome utente                 Messaggio decifrato
+        return "From" + received_message[0] + ": " + safe_message.decrypt(new BigInteger(encrypted_message));
     }
 
     // Quando qualcuno ti aggiunge a un gruppo

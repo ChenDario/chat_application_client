@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -12,9 +13,12 @@ import java.util.Scanner;
 public class Main {
 
     private static String username;
+    private static Encryption safe_message;
+    private static HashMap<String, String> users_key = new HashMap<>();
 
     public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
         HashMap<String, String> group_codes = new HashMap<>();
+
         
         //colori e stili per i testi
         String RED_TEXT = "\033[31m";
@@ -41,8 +45,14 @@ public class Main {
         username = name.input_username();
         System.out.println("Username: " + username + "\n");
 
+        //Generazione delle chiavi pubbliche e private
+        safe_message.generateKeys(1024);
+        String publicKey = safe_message.getPublicKey();
+        System.out.println("Chiave pubblica" + publicKey);
+        out.writeBytes("PublicKey " + publicKey + "\n");
+
         // Avvia la ricezione dei messaggi
-        ReceiveThread r = new ReceiveThread(in, out, group_codes);
+        ReceiveThread r = new ReceiveThread(in, out, group_codes, safe_message);
         r.start();
 
         sendMessage(in, out, scanner);
@@ -55,12 +65,10 @@ public class Main {
 
     }
 
-    public static void sendMessage(BufferedReader in, DataOutputStream out, Scanner scan)
-            throws IOException, InterruptedException {
+    public static void sendMessage(BufferedReader in, DataOutputStream out, Scanner scan) throws IOException, InterruptedException {
+        Thread.sleep(500);
 
         String message = "";
-
-        System.out.println("Enter /show_command to print all the available commands: ");
 
         //colori e stili per i testi
         String RED_TEXT = "\033[31m";
@@ -72,16 +80,17 @@ public class Main {
 
         String RESET_TEXT = "\033[0m";
 
-
         // Loop per inviare messaggi
         while (true) {
-
+            stampaMenu();
             boolean x; // in caso si debba ripetere il ciclo
+
             do {
                 x = false;
-
-                stampaMenu();
-                String scelta = scan.nextLine();
+                String scelta = "";
+                //Inserimento dell'operazione
+                System.out.println("Scrivi il numero corrispondente all' azione che vorresti fare");
+                scelta = scan.nextLine();
 
                 switch (scelta) {
                     case "0": // Disconnessione...
@@ -91,10 +100,15 @@ public class Main {
                     case "1": //Inviare un messaggio ad un altro utente" @username “message”
                         System.out.println("Scrivi il nome utente a cui inviare il messaggio");
                         String nomeUtenteEsistente = scan.nextLine();
+                        //Da inserire se l'utente inserito esiste o meno(Controllo da eseguire subito)
+                        //Controllo se ho la public key dell'utente di destinazione, in caso negativo la richiedo subito
+                        findPublicKey(nomeUtenteEsistente, out);
                         message = "@" + nomeUtenteEsistente + " ";
+                        //Inserimento messaggio
                         System.out.println("Scrivi il messaggio: ");
                         String text1 = scan.nextLine();
-                        message = message + text1;
+                        //Codifica del messaggio
+                        message += encrypt_message(message, nomeUtenteEsistente);
                         break;
 
                     case "2": //Inviare un messaggio ad un gruppo G@group_name “message” 
@@ -122,7 +136,7 @@ public class Main {
                         break;
 
                     case "6": //Lista dei membri di un gruppo /users_group nome_gruppo
-                        System.out.println("Digita il nome del gruppo per vedere i partecipanti");
+                        System.out.println("Digita il nome del gruppo per vedere i suoi partecipanti");
                         String gruppoEsistente = scan.nextLine();
                         message = "/users_group " + gruppoEsistente;
                         break;
@@ -145,13 +159,13 @@ public class Main {
                         do {
                             System.out.println("Inserisci il nome utente da inserire");
                             String nomeUtente = scan.nextLine();
-                            message = message + " " + nomeUtente + ","; //aggancia ogni volta utente nuovo
+                            message += nomeUtente + ", "; //aggancia ogni volta utente nuovo
                             System.out.println("Vuoi inserire un altro utente? digitare 'si' se la risposta è affermativa");
                             rispostaSi = scan.nextLine();
                         } while (rispostaSi.equalsIgnoreCase("si"));
-                        if (message.length() > 0 && message.charAt(message.length() - 1) == ',') { 
-                            //toglere l'ultimo carrattere perchè è una ,
-                            message = message.substring(0, message.length() - 1);
+                        if (message.length() > 0 && message.charAt(message.length() - 2) == ',') { 
+                            //togliere l'ultimo carrattere perchè è una ,
+                            message = message.substring(0, message.length() - 2);
                         } //dovrebbe essere a posto
                         //System.out.println(message);
                         break;
@@ -163,7 +177,7 @@ public class Main {
                         break;
 
                     default:
-                        System.out.println("inserimento non valido, riprovare");
+                        System.out.println(RED_TEXT + "Request Not Found" + RESET_TEXT);
                         x = true;
                         break;
                 }
@@ -185,9 +199,25 @@ public class Main {
         }
     }
 
+    public static String encrypt_message(String message, String user){
+        String public_key = users_key.get(user);
+        String[] key_dest = public_key.split(" : ");
+
+        return safe_message.encrypt(message, new BigInteger(key_dest[0]), new BigInteger(key_dest[1]));
+    }
+
+    public static void findPublicKey(String user, DataOutputStream out) throws IOException{
+        if(users_key.get(user) != null)
+            getPublicKey(user, out);
+        //Se non ha la chiave la richiede al server
+    }
+
+    public static void getPublicKey(String user_dest, DataOutputStream out) throws IOException{
+        out.writeBytes("/RequestKey " + user_dest);
+    }
+
     public static void stampaMenu() { // funzione per stampare il menu
-        // tutti print out con le opzioni
-        System.out.println("Scrivi il numero corrispondente all' azione che vorresti fare");
+        // tutti print out con le opzione
         System.out.println("0) Uscire dall' aplicazione"); // exit
         System.out.println("1) Inviare un messaggio ad un altro utente"); // @username “message” 
         System.out.println("2) Inviare un messaggio ad un gruppo"); // G@group_name “message”
