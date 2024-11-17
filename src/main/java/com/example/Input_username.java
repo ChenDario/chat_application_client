@@ -7,16 +7,6 @@ import java.util.Scanner;
 
 public class Input_username {
 
-    //colori e stili per i testi  
-    String RED_TEXT = "\033[31m";
-    String GREEN_TEXT = "\033[32m";
-    String YELLOW_TEXT = "\033[33m";
-    String MAGENTA_TEXT = "\033[35m";
-    String BLUE_TEXT = "\033[36m";
-    String BOLD_Text = "\033[1m";
-
-    String RESET_TEXT = "\033[0m";
-
     Scanner scanner;
     BufferedReader in;
     DataOutputStream out;
@@ -31,6 +21,7 @@ public class Input_username {
     public String input_username() throws IOException{
         boolean valido = true;
         String ans;
+
         do {
             //Inserimento dell'username
             System.out.println("SCEGLI UN'USERNAME \n (Sono consentiti tutti i caratteri dell'alfabeto, che saranno case sensitive, i numeri e i 3 caratteri speciali - . _)\nInserire un'username valido: ");
@@ -54,14 +45,14 @@ public class Input_username {
 
     public void username_result(String ans){
         switch (ans) {
-            case ">" -> System.out.println(RED_TEXT + "Username troppo lungo, RETRY" + RESET_TEXT);
-            case "<" -> System.out.println(RED_TEXT + "Username troppo corto, RETRY" + RESET_TEXT);
-            case "ERROR_500" -> System.out.println(RED_TEXT + "Internal Server Error" + RESET_TEXT);
-            case "ERROR_400" -> System.out.println(RED_TEXT + "Invalid Character present, RETRY" + RESET_TEXT);
-            case "ERROR_401" -> System.out.println(RED_TEXT + "Blank Username, RETRY" + RESET_TEXT);
-            case "ERROR_402" -> System.out.println(RED_TEXT + "Username already taken, RETRY" + RESET_TEXT);
-            case "SUCC_200" -> System.out.println(GREEN_TEXT + BOLD_Text + "Welcome to our team " + this.username + "!!" + RESET_TEXT);
-            default -> System.out.println(RED_TEXT + BOLD_Text + " - - ERROR - - " + RESET_TEXT);
+            case ">" -> System.out.println(ConsoleColors.RED_TEXT + "Username troppo lungo, RETRY" + ConsoleColors.RESET_TEXT);
+            case "<" -> System.out.println(ConsoleColors.RED_TEXT + "Username troppo corto, RETRY" + ConsoleColors.RESET_TEXT);
+            case "ERROR_500" -> System.out.println(ConsoleColors.RED_TEXT + "Internal Server Error" + ConsoleColors.RESET_TEXT);
+            case "ERROR_400" -> System.out.println(ConsoleColors.RED_TEXT + "Invalid Character present, RETRY" + ConsoleColors.RESET_TEXT);
+            case "ERROR_401" -> System.out.println(ConsoleColors.RED_TEXT + "Blank Username, RETRY" + ConsoleColors.RESET_TEXT);
+            case "ERROR_402" -> System.out.println(ConsoleColors.RED_TEXT + "Username already taken, RETRY" + ConsoleColors.RESET_TEXT);
+            case "SUCC_200" -> System.out.println(ConsoleColors.GREEN_TEXT + ConsoleColors.BOLD_TEXT + "Welcome to our team " + this.username + "!!" + ConsoleColors.RESET_TEXT);
+            default -> System.out.println(ConsoleColors.RED_TEXT + ConsoleColors.BOLD_TEXT + " - - ERROR - - " + ConsoleColors.RESET_TEXT);
         }
     }
 }

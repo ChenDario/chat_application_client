@@ -76,7 +76,6 @@ public class ReceiveThread extends Thread {
                 //Ricezione e salvattaggio delle chiavi pubbliche degli altri utenti
                 case "PUBLIC_KEY":
                     saveKey();
-                    System.out.println("Chiave pubblica memorizzata");
                     break;
 
                 case "RCV_100": // Ricezione del messaggio (invio messaggio da parte di un altro utente)
@@ -177,10 +176,6 @@ public class ReceiveThread extends Thread {
 
         //Salvataggio della chiave pubblica dell'utente di destinazione
         users_publickey.put(user, key);
-
-        for(String i : users_publickey.keySet()){
-            System.out.println("Utente: " + i + "- Chiave Pubblica: " + users_publickey.get(i));
-        }
     }
 
     //Decrypt the message

@@ -4,49 +4,57 @@ import java.math.BigInteger;
 import java.util.Random;
 
 public class Encryption {
-    //Crittografia con Algoritmo RSA 
-    private BigInteger e; // Esponente pubblico
-    private BigInteger d; // Esponente privato
-    private BigInteger n; // Modulo
+    // Variables to store RSA keys
+    private BigInteger e; // Public exponent (part of the public key)
+    private BigInteger d; // Private exponent (part of the private key)
+    private BigInteger n; // Modulus common to both public and private keys
 
-    //Costruttore vuoto
-    public Encryption(){
-
+    // Empty constructor for the Encryption class
+    public Encryption() {
     }
 
+    // Method to generate RSA keys
     public void generateKeys(int bitLength) {
         Random rand = new Random();
 
-        // Genera due numeri primi casuali
+        // Generate two random prime numbers p and q of the specified bit length
         BigInteger p = BigInteger.probablePrime(bitLength, rand);
         BigInteger q = BigInteger.probablePrime(bitLength, rand);
 
-        // Calcola n e φ(n)
+        // Calculate the modulus n = p * q
         n = p.multiply(q);
+
+        // Calculate φ(n) = (p-1) * (q-1), where φ(n) is Euler's totient function
         BigInteger phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
 
-        // Scegli e come numero coprimo con φ(n)
+        // Choose e such that it is coprime with φ(n) and less than φ(n)
         do {
-            e = new BigInteger(bitLength, rand);
+            e = new BigInteger(bitLength, rand); // Generate a random number
         } while (!e.gcd(phi).equals(BigInteger.ONE) || e.compareTo(phi) >= 0);
 
-        // Calcola d come inverso moltiplicativo di e mod φ(n)
+        // Calculate d as the modular multiplicative inverse of e modulo φ(n)
         d = e.modInverse(phi);
     }
 
-    //Crittografa un messaggio di testo usando la chiave pubblica dell'utente di destinazione
+    // Encrypt a message using the recipient's public key
     public String encrypt(String message, BigInteger e_dest, BigInteger n_dest) {
+        // Convert the plaintext message into a number (byte representation)
         BigInteger messageNumeric = new BigInteger(message.getBytes());
-        return messageNumeric.modPow(e_dest, n_dest).toString(); // Crittografia: c = m^e mod n
+
+        // Perform RSA encryption: c = m^e mod n
+        return messageNumeric.modPow(e_dest, n_dest).toString();
     }
 
-    //Decrittografa un messaggio crittografato usando la chiave privata.
+    // Method to decrypt an encrypted message using the private key
     public String decrypt(BigInteger encryptedMessage) {
-        BigInteger decryptedNumeric = encryptedMessage.modPow(this.d, this.n); // Decrittografia: m = c^d mod n
+        // Perform RSA decryption: m = c^d mod n
+        BigInteger decryptedNumeric = encryptedMessage.modPow(this.d, this.n);
+
+        // Convert the decrypted number back to a plaintext string
         return new String(decryptedNumeric.toByteArray());
     }
 
-    //Get per la chiave pubblica
+    // Method to get the public key
     public String getPublicKey() {
         return this.e + " : " + this.n;
     }
