@@ -95,7 +95,7 @@ public class ReceiveThread extends Thread {
                     String grp_code = in.readLine();
 
                     this.group_codes.remove(grp_name, grp_code); // Rimozione dal hashMap del gruppo
-                    System.out.println("Uscito dal gruppo: " + grp_name + " riuscita");
+                    System.out.println(ConsoleColors.MAGENTA_TEXT + "Uscito dal gruppo: " + grp_name + " riuscita" + ConsoleColors.BG_MAGENTA);
                     break;    
 
                 case "CL_200": // Messaggio di conferma per il gruppo creato
@@ -104,7 +104,7 @@ public class ReceiveThread extends Thread {
                     break;
 
                 case "SUCC_200": // Richiesta completata con successo
-                    System.out.println(ConsoleColors.GREEN_TEXT + "Richiesta completata con successo" + ConsoleColors.RESET_TEXT);
+                    System.out.println(ConsoleColors.GREEN_TEXT + "Richiesta completata con successo!" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "SRV_200": // Risposta del server
@@ -113,7 +113,7 @@ public class ReceiveThread extends Thread {
                     break;
 
                 case "SUCC_201": // Conferma dell'invio del messaggio
-                    System.out.println(ConsoleColors.ITALIC + "Messaggio inviato con successo" + ConsoleColors.RESET_TEXT);
+                    System.out.println(ConsoleColors.ITALIC + "Messaggio inviato con successo!" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "GRP_INFO": // Vieni aggiunto in un gruppo

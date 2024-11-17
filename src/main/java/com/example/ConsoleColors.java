@@ -7,6 +7,8 @@ public class ConsoleColors {
     public static final String YELLOW_TEXT = "\033[33m";
     public static final String MAGENTA_TEXT = "\033[35m";
     public static final String BLUE_TEXT = "\033[36m";
+    public static final String BRIGHT_CYAN = "\033[96m";
+
 
     //stili di testo
     public static final String BOLD_TEXT = "\033[1m";

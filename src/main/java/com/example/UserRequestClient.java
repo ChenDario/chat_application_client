@@ -71,23 +71,23 @@ public class UserRequestClient {
     }
 
     private static String leftGroup(Scanner scanner){
-        System.out.println("Inserisci il nome del gruppo da qui vuoi uscire");
+        System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC +"Inserisci il nome del gruppo da qui vuoi uscire: " + ConsoleColors.RESET_TEXT);
         String nomeEliminabile = scanner.nextLine();
         return "/left_G@ " + nomeEliminabile;
     }
 
     private static String addUsersGroup(Scanner scanner){
         String message = "/join_G@ ";
-        System.out.println("Inserisci il nome del gruppo da qui vuoi aggiungere un altro utente");
+        System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Inserisci il nome del gruppo da qui vuoi aggiungere un altro utente: " + ConsoleColors.RESET_TEXT);
         String nomeGruppoEsistente = scanner.nextLine();
         message += nomeGruppoEsistente + " - ";
         String rispostaSi;
 
         do {
-            System.out.println("Inserisci il nome utente da inserire");
+            System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Inserisci il nome utente da inserire: " + ConsoleColors.RESET_TEXT);
             String nomeUtente = scanner.nextLine();
             message += nomeUtente + ", "; //aggancia ogni volta utente nuovo
-            System.out.println("Vuoi inserire un altro utente? digitare 'si' se la risposta è affermativa");
+            System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Vuoi inserire un altro utente? digitare 'si' se la risposta è affermativa: " + ConsoleColors.RESET_TEXT);
             rispostaSi = scanner.nextLine();
         } while (rispostaSi.equalsIgnoreCase("si"));
 
@@ -100,29 +100,29 @@ public class UserRequestClient {
     }
 
     private static String create_group(Scanner scanner){
-        System.out.println("Digitare il nome del gruppo da creare");
+        System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Digitare il nome del gruppo da creare: " + ConsoleColors.RESET_TEXT);
         String nomeGruppoDaCreare = scanner.nextLine();
         return "/create_group " + nomeGruppoDaCreare;
     }
 
     private static String getUsersInGroup(Scanner scanner){
-        System.out.println("Digita il nome del gruppo per vedere i suoi partecipanti");
+        System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Digita il nome del gruppo per vedere i suoi partecipanti: " + ConsoleColors.RESET_TEXT);
         String gruppoEsistente = scanner.nextLine();
         return "/users_group " + gruppoEsistente;
     }    
 
     private static String broadcastMessage(Scanner scanner){
-        System.out.println("Scrivi il messaggio da inviare a tutti: ");
+        System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Scrivi il messaggio da inviare a tutti: " + ConsoleColors.RESET_TEXT);
         String messaggioTutti = scanner.nextLine();
         return "@All " + messaggioTutti;
     }
 
     private static String privateMessage(Scanner scanner, HashMap<String, String> users_key, DataOutputStream out, Encryption safe_message) throws IOException {
-        System.out.println("Scrivi il nome utente a cui inviare il messaggio:");
+        System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Scrivi il nome utente a cui inviare il messaggio:" + ConsoleColors.RESET_TEXT);
         String nomeUtenteEsistente = scanner.nextLine();
         findPublicKey(nomeUtenteEsistente, users_key, out);
 
-        System.out.println("Scrivi il messaggio:");
+        System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Scrivi il messaggio:" + ConsoleColors.RESET_TEXT);
         String messaggio = scanner.nextLine();
 
         return "@" + nomeUtenteEsistente + " " + encrypt_message(messaggio, nomeUtenteEsistente, users_key, safe_message);    
@@ -150,7 +150,7 @@ public class UserRequestClient {
     }
 
     private static String groupMessage(Scanner scanner) {
-        System.out.println("Scrivi il nome del gruppo a cui inviare il messaggio:");
+        System.out.println( ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC +"Scrivi il nome del gruppo a cui inviare il messaggio:" + ConsoleColors.RESET_TEXT );
         String nomeGruppo = scanner.nextLine();
         System.out.println(ConsoleColors.ITALIC +"Scrivi il messaggio:" + ConsoleColors.RESET_TEXT);
         String messaggio = scanner.nextLine();
@@ -160,16 +160,17 @@ public class UserRequestClient {
     // funzione per stampare il menu
     private static void stampaMenu() { 
         // tutti print out con le opzione
-        System.out.println("0) Uscire dall' aplicazione"); // exit
-        System.out.println("1) Inviare un messaggio ad un altro utente"); // @username “message” 
-        System.out.println("2) Inviare un messaggio ad un gruppo"); // G@group_name “message”
-        System.out.println("3) Inviare un messaggio a tutti gli utenti registrati"); // @All “message”
-        System.out.println("4) Lista degli utenti attivi"); // @_list
-        System.out.println("5) lista dei gruppi attivi"); // G@_list
-        System.out.println("6) Lista dei membri di un gruppo"); // /users_group nome_gruppo
-        System.out.println("7) Lista di tutte le chat attive (sia gruppi e sia private)"); // /list_all
-        System.out.println("8) Creazione di una chat di gruppo tra 3 o più utenti"); // /create_group “group_name”
-        System.out.println("9) Per aggiungere un utente ad un gruppo"); // /join_G@ group_name - username1, username2…..
-        System.out.println("10) Per uscire dal gruppo"); // /left_G@ group_name
+        System.out.println(ConsoleColors.ITALIC + ConsoleColors.BOLD_TEXT + "-----------------------PANNELLO COMANDI-----------------------" + ConsoleColors.RESET_TEXT);
+        System.out.println( ConsoleColors.BRIGHT_CYAN + ConsoleColors.BOLD_TEXT + "0)" + ConsoleColors.RESET_TEXT + " Uscire dall' aplicazione"); // exit
+        System.out.println( ConsoleColors.BRIGHT_CYAN + ConsoleColors.BOLD_TEXT + "1)" + ConsoleColors.RESET_TEXT + " Inviare un messaggio ad un altro utente"); // @username “message” 
+        System.out.println( ConsoleColors.BRIGHT_CYAN + ConsoleColors.BOLD_TEXT + "2)" + ConsoleColors.RESET_TEXT + " Inviare un messaggio ad un gruppo"); // G@group_name “message”
+        System.out.println( ConsoleColors.BRIGHT_CYAN + ConsoleColors.BOLD_TEXT + "3)" + ConsoleColors.RESET_TEXT + " Inviare un messaggio a tutti gli utenti registrati"); // @All “message”
+        System.out.println( ConsoleColors.BRIGHT_CYAN + ConsoleColors.BOLD_TEXT + "4)" + ConsoleColors.RESET_TEXT + " Lista degli utenti attivi"); // @_list
+        System.out.println( ConsoleColors.BRIGHT_CYAN + ConsoleColors.BOLD_TEXT + "5)" + ConsoleColors.RESET_TEXT + " lista dei gruppi attivi"); // G@_list
+        System.out.println( ConsoleColors.BRIGHT_CYAN + ConsoleColors.BOLD_TEXT + "6)" + ConsoleColors.RESET_TEXT + " Lista dei membri di un gruppo"); // /users_group nome_gruppo
+        System.out.println( ConsoleColors.BRIGHT_CYAN + ConsoleColors.BOLD_TEXT + "7)" + ConsoleColors.RESET_TEXT + " Lista di tutte le chat attive (sia gruppi e sia private)"); // /list_all
+        System.out.println( ConsoleColors.BRIGHT_CYAN + ConsoleColors.BOLD_TEXT + "8)" + ConsoleColors.RESET_TEXT + " Creazione di una chat di gruppo tra 3 o più utenti"); // /create_group “group_name”
+        System.out.println( ConsoleColors.BRIGHT_CYAN + ConsoleColors.BOLD_TEXT + "9)" + ConsoleColors.RESET_TEXT + " Per aggiungere un utente ad un gruppo"); // /join_G@ group_name - username1, username2…..
+        System.out.println( ConsoleColors.BRIGHT_CYAN + ConsoleColors.BOLD_TEXT + "10)" + ConsoleColors.RESET_TEXT + " Per uscire dal gruppo"); // /left_G@ group_name
     }
 }

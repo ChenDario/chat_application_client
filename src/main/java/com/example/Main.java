@@ -48,7 +48,7 @@ public class Main {
         UserRequestClient.user_input_request(out, scanner, users_key, safe_message, group_codes);
 
         Toolkit.getDefaultToolkit().beep(); // emette un suono di sistema per comunicare che la connessione è stata chiusa
-        System.out.println(ConsoleColors.YELLOW_TEXT + "Disconnessione Terminata!" + ConsoleColors.RESET_TEXT);
+        System.out.println(ConsoleColors.MAGENTA_TEXT + "Disconnessione Terminata!" + ConsoleColors.RESET_TEXT);
 
         //Close everything
         in.close();
@@ -56,7 +56,7 @@ public class Main {
         scanner.close();
         socket.close();
         }catch (IOException e) { //gestisce l'eccezzione che avviene se il server non è attivo
-            System.err.println("Errore: Impossibile connettersi al server. Assicurati che sia attivo.");
+            System.err.println(ConsoleColors.ITALIC + ConsoleColors.RED_TEXT + "Errore: Impossibile connettersi al server. Assicurati che sia attivo."+ ConsoleColors.RESET_TEXT) ;
         }
     }
 
