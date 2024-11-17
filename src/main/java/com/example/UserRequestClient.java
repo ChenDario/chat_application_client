@@ -11,8 +11,9 @@ public class UserRequestClient {
     public static void user_input_request(DataOutputStream out, Scanner scan, HashMap<String, String> users_key,Encryption safe_message, HashMap<String, String> group_codes) throws IOException, InterruptedException {
         Thread.sleep(500);
         String message = "";
+        boolean sendMessage = true; 
         // Loop per inviare messaggi
-        while (true) {
+        do {
             stampaMenu();
 
             do {
@@ -27,15 +28,16 @@ public class UserRequestClient {
             // Condizione di uscita
             if (message.equalsIgnoreCase("exit")) {
                 System.out.println(ConsoleColors.YELLOW_TEXT + "Disconnessione..." + ConsoleColors.RESET_TEXT);
-                break;
+                sendMessage = false;
+            } else {
+                // Invia il messaggio al server
+                out.writeBytes(message + "\n");
             }
-            // Invia il messaggio al server
-            out.writeBytes(message + "\n");
 
             // Questo sleep permette di far eseguire la richiesta e farla stampare prima che
-            // ricominci il loop (cosa visiva)
+            // ricominci il loop (cosa puramente visiva)
             Thread.sleep(1000);
-        }
+        } while (sendMessage);
     }
 
     private static String handleRequest(String scelta, Scanner scanner, DataOutputStream out, HashMap<String, String> users_key, Encryption safe_message) throws IOException {

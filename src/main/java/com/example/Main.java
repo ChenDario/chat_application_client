@@ -1,5 +1,7 @@
 package com.example;
 
+//Riproduzione di tracce audio
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,6 +10,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Scanner;
+
 
 public class Main {
 
@@ -32,6 +35,8 @@ public class Main {
         Input_username name = new Input_username(scanner, in, out);
         username = name.input_username();
 
+        Toolkit.getDefaultToolkit().beep(); // emette un suono di sistema per comunicare che la connessione è avvenuta
+
         //Generate public and private key
         create_keys(safe_message, out);
 
@@ -41,6 +46,8 @@ public class Main {
 
         //Handle The Requests From User
         UserRequestClient.user_input_request(out, scanner, users_key, safe_message, group_codes);
+
+        Toolkit.getDefaultToolkit().beep(); // emette un suono di sistema per comunicare che la connessione è stata chiusa
 
         //Close everything
         in.close();
