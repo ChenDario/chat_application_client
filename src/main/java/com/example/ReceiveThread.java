@@ -7,15 +7,6 @@ import java.math.BigInteger;
 import java.util.HashMap;
 
 public class ReceiveThread extends Thread {
-    
-    // Colori e stili per i testi
-    String RED_TEXT = "\033[31m";
-    String GREEN_TEXT = "\033[32m";
-    String YELLOW_TEXT = "\033[33m";
-    String MAGENTA_TEXT = "\033[35m";
-    String BLUE_TEXT = "\033[36m";
-    String BOLD_TEXT = "\033[1m";
-    String RESET_TEXT = "\033[0m";
 
     private BufferedReader in;
     private DataOutputStream out;
@@ -78,9 +69,14 @@ public class ReceiveThread extends Thread {
                     saveKey();
                     break;
 
-                case "RCV_100": // Ricezione del messaggio (invio messaggio da parte di un altro utente)
+                case "RCV_100": // Ricezione del messaggio criptati
                     messaggio = in.readLine();
                     System.out.println(decrypt_message(messaggio));
+                    break;
+
+                case "RCV_101": // Ricezione del dei messaggi non criptati
+                    messaggio = in.readLine();
+                    System.out.println(messaggio);
                     break;
 
                 case "RCV_200": // Conferma creazione di un gruppo
@@ -103,12 +99,12 @@ public class ReceiveThread extends Thread {
                     break;    
 
                 case "CL_200": // Messaggio di conferma per il gruppo creato
-                    System.out.println(GREEN_TEXT + "Group Created" + RESET_TEXT);
+                    System.out.println(ConsoleColors.GREEN_TEXT + "Group Created" + ConsoleColors.RESET_TEXT);
                     System.out.println("Enter /join_G@ group_name - username1, username2...... To add the users to the group");
                     break;
 
                 case "SUCC_200": // Richiesta completata con successo
-                    System.out.println(GREEN_TEXT + "Richiesta completata con successo" + RESET_TEXT);
+                    System.out.println(ConsoleColors.GREEN_TEXT + "Richiesta completata con successo" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "SRV_200": // Risposta del server
@@ -125,11 +121,11 @@ public class ReceiveThread extends Thread {
                     break;
 
                 case "ERROR_400": // Errore carattere non valido
-                    System.out.println(RED_TEXT + "Invalid Character present, RETRY" + RESET_TEXT);
+                    System.out.println(ConsoleColors.RED_TEXT + "Invalid Character present, RETRY" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "ERROR_403": // Utente già presente
-                    System.out.println(RED_TEXT + "Utente già presente" + RESET_TEXT);
+                    System.out.println(ConsoleColors.RED_TEXT + "Utente già presente" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "ERROR_404": // Not found
@@ -145,7 +141,7 @@ public class ReceiveThread extends Thread {
                     break;
 
                 case "ERROR_405":
-                    System.out.println(RED_TEXT + "Request Not Found" + RESET_TEXT);
+                    System.out.println(ConsoleColors.MAGENTA_TEXT + "Request Not Found" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "ERROR_406": 

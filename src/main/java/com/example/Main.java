@@ -14,10 +14,10 @@ public class Main {
     private static String username;
     private static Encryption safe_message = new Encryption();
     private static HashMap<String, String> users_key = new HashMap<>();
+    private static HashMap<String, String> group_codes = new HashMap<>();
 
     public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
         //Codici Gruppo non usati.args..
-        HashMap<String, String> group_codes = new HashMap<>();
 
         Socket socket = new Socket("localhost", 3000);
         System.out.println(ConsoleColors.YELLOW_TEXT + "Il client si è collegato" + ConsoleColors.RESET_TEXT);
@@ -31,7 +31,6 @@ public class Main {
         // Validazione della connessione tramite l'inserimento dell'usernamem
         Input_username name = new Input_username(scanner, in, out);
         username = name.input_username();
-        System.out.println("Username: " + username + "\n");
 
         //Generate public and private key
         create_keys(safe_message, out);
@@ -41,7 +40,7 @@ public class Main {
         r.start();
 
         //Handle The Requests From User
-        UserRequestClient.user_input_request(out, scanner, group_codes, safe_message);
+        UserRequestClient.user_input_request(out, scanner, users_key, safe_message, group_codes);
 
         //Close everything
         in.close();
@@ -55,7 +54,7 @@ public class Main {
         safe_message.generateKeys(1024);
         String publicKey = safe_message.getPublicKey();
 
-        //Sending public key for the encryption
+        //Sending public key to the server for the encryption
         out.writeBytes("PublicKey " + publicKey + "\n");
     } 
 }

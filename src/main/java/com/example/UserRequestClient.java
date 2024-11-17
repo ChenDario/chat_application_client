@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class UserRequestClient {
 
-    public static void user_input_request(DataOutputStream out, Scanner scan, HashMap<String, String> users_key,Encryption safe_message) throws IOException, InterruptedException {
+    public static void user_input_request(DataOutputStream out, Scanner scan, HashMap<String, String> users_key,Encryption safe_message, HashMap<String, String> group_codes) throws IOException, InterruptedException {
         Thread.sleep(500);
         String message = "";
         // Loop per inviare messaggi
@@ -52,7 +52,7 @@ public class UserRequestClient {
                 return "@_list";
             case "5":
                 return "G@_list";
-            case "6":
+            case "6"://Da request not found
                 return getUsersInGroup(scanner);
             case "7":
                 return "/list_all";
@@ -128,12 +128,8 @@ public class UserRequestClient {
 
     private static void findPublicKey(String user, HashMap<String, String> users_key, DataOutputStream out) throws IOException{
         if(users_key.get(user) == null)
-            getPublicKey(user, out);
+        out.writeBytes("/request_key " + user + "\n");
         //Se non ha la chiave la richiede al server
-    }
-
-    private static void getPublicKey(String user_dest, DataOutputStream out) throws IOException{
-        out.writeBytes("/request_key " + user_dest + "\n");
     }
 
     private static String encrypt_message(String message, String user, HashMap<String, String> users_key, Encryption safe_message){
