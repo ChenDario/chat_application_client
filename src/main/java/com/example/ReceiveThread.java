@@ -113,7 +113,7 @@ public class ReceiveThread extends Thread {
                     break;
 
                 case "SUCC_201": // Conferma dell'invio del messaggio
-                    System.out.println("Messaggio inviato con successo");
+                    System.out.println(ConsoleColors.ITALIC + "Messaggio inviato con successo" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "GRP_INFO": // Vieni aggiunto in un gruppo
@@ -129,31 +129,31 @@ public class ReceiveThread extends Thread {
                     break;
 
                 case "ERROR_404": // Not found
-                    System.out.println("- - ERROR - - REQUEST NOT FOUND");
+                    System.out.println(ConsoleColors.RED_TEXT + "- - ERROR - - REQUEST NOT FOUND" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "ERROR_404_G": // Gruppo not found
-                    System.out.println("Group NOT FOUND");
+                    System.out.println(ConsoleColors.RED_TEXT +"Group NOT FOUND" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "ERROR_404_P": // Chat not found
-                    System.out.println("User NOT FOUND");
+                    System.out.println(ConsoleColors.RED_TEXT +"User NOT FOUND" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "ERROR_405":
-                    System.out.println(ConsoleColors.MAGENTA_TEXT + "Request Not Found" + ConsoleColors.RESET_TEXT);
+                    System.out.println(ConsoleColors.RED_TEXT + "Request Not Found" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "ERROR_406": 
-                    System.out.println("All available user added to the group");
+                    System.out.println(ConsoleColors.RED_TEXT + "All available user added to the group" + ConsoleColors.RESET_TEXT);
                     break;
                 
                 case "ERROR_407": 
-                    System.out.println("Unico utente presente, messaggio di broadcast fallito");
+                    System.out.println(ConsoleColors.MAGENTA_TEXT +"Unico utente presente, messaggio di broadcast fallito" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "ERROR_500":
-                    System.out.println("Internal Server Error");
+                    System.out.println(  ConsoleColors.RED_TEXT +"Internal Server Error" + ConsoleColors.RESET_TEXT);
                     break;
 
                 default: 

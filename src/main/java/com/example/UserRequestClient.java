@@ -19,7 +19,7 @@ public class UserRequestClient {
             do {
                 String scelta = "";
                 //Inserimento dell'operazione
-                System.out.println("Scrivi il numero corrispondente all' azione che vorresti fare");
+                System.out.println(ConsoleColors.UNDERLINE + ConsoleColors.BOLD_TEXT +"Scrivi il numero corrispondente all' azione che vorresti fare: " + ConsoleColors.RESET_TEXT);
                 scelta = scan.nextLine();
 
                 message = handleRequest(scelta, scan, out, users_key, safe_message);
@@ -152,7 +152,7 @@ public class UserRequestClient {
     private static String groupMessage(Scanner scanner) {
         System.out.println("Scrivi il nome del gruppo a cui inviare il messaggio:");
         String nomeGruppo = scanner.nextLine();
-        System.out.println("Scrivi il messaggio:");
+        System.out.println(ConsoleColors.ITALIC +"Scrivi il messaggio:" + ConsoleColors.RESET_TEXT);
         String messaggio = scanner.nextLine();
         return "G@" + nomeGruppo + " " + messaggio;
     }

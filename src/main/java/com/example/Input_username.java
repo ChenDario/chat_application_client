@@ -51,7 +51,7 @@ public class Input_username {
             case "ERROR_400" -> System.out.println(ConsoleColors.RED_TEXT + "Invalid Character present, RETRY" + ConsoleColors.RESET_TEXT);
             case "ERROR_401" -> System.out.println(ConsoleColors.RED_TEXT + "Blank Username, RETRY" + ConsoleColors.RESET_TEXT);
             case "ERROR_402" -> System.out.println(ConsoleColors.RED_TEXT + "Username already taken, RETRY" + ConsoleColors.RESET_TEXT);
-            case "SUCC_200" -> System.out.println(ConsoleColors.GREEN_TEXT + ConsoleColors.BOLD_TEXT + "Welcome to our team " + this.username + "!!" + ConsoleColors.RESET_TEXT);
+            case "SUCC_200" -> System.out.println(ConsoleColors.GREEN_TEXT + ConsoleColors.BOLD_TEXT + "Welcome to our team " + this.username + "!!!" + ConsoleColors.RESET_TEXT);
             default -> System.out.println(ConsoleColors.RED_TEXT + ConsoleColors.BOLD_TEXT + " - - ERROR - - " + ConsoleColors.RESET_TEXT);
         }
     }

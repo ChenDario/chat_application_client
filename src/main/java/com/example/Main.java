@@ -21,10 +21,11 @@ public class Main {
 
     public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
         //Codici Gruppo non usati.args..
-
+        try{
         Socket socket = new Socket("localhost", 3000);
         System.out.println(ConsoleColors.YELLOW_TEXT + "Il client si è collegato" + ConsoleColors.RESET_TEXT);
-        
+        Toolkit.getDefaultToolkit().beep(); // emette un suono di sistema per comunicare che la connessione è avvenuta
+
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
@@ -35,7 +36,6 @@ public class Main {
         Input_username name = new Input_username(scanner, in, out);
         username = name.input_username();
 
-        Toolkit.getDefaultToolkit().beep(); // emette un suono di sistema per comunicare che la connessione è avvenuta
 
         //Generate public and private key
         create_keys(safe_message, out);
@@ -48,12 +48,16 @@ public class Main {
         UserRequestClient.user_input_request(out, scanner, users_key, safe_message, group_codes);
 
         Toolkit.getDefaultToolkit().beep(); // emette un suono di sistema per comunicare che la connessione è stata chiusa
+        System.out.println(ConsoleColors.YELLOW_TEXT + "Disconnessione Terminata!" + ConsoleColors.RESET_TEXT);
 
         //Close everything
         in.close();
         out.close();
         scanner.close();
         socket.close();
+        }catch (IOException e) { //gestisce l'eccezzione che avviene se il server non è attivo
+            System.err.println("Errore: Impossibile connettersi al server. Assicurati che sia attivo.");
+        }
     }
 
     private static void create_keys(Encryption safe_message, DataOutputStream out) throws IOException{
