@@ -78,7 +78,7 @@ public class UserRequestClient {
 
     private static String addUsersGroup(Scanner scanner){
         String message = "/join_G@ ";
-        System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Inserisci il nome del gruppo da qui vuoi aggiungere un altro utente: " + ConsoleColors.RESET_TEXT);
+        System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Inserisci il nome del gruppo a cui desideri aggiungere un altro utente: " + ConsoleColors.RESET_TEXT);
         String nomeGruppoEsistente = scanner.nextLine();
         message += nomeGruppoEsistente + " - ";
         String rispostaSi;

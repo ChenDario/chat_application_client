@@ -56,7 +56,7 @@ public class Main {
         scanner.close();
         socket.close();
         }catch (IOException e) { //gestisce l'eccezzione che avviene se il server non è attivo
-            System.err.println(ConsoleColors.ITALIC + ConsoleColors.RED_TEXT + "Errore: Impossibile connettersi al server. Assicurati che sia attivo."+ ConsoleColors.RESET_TEXT) ;
+            System.err.println(ConsoleColors.ITALIC + ConsoleColors.RED_TEXT + "----ERROR---- \n Impossibile connettersi al server. Assicurati che sia attivo, o riprova più tardi."+ ConsoleColors.RESET_TEXT) ;
         }
     }
 

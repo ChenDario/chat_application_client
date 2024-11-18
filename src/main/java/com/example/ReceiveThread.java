@@ -95,7 +95,7 @@ public class ReceiveThread extends Thread {
                     String grp_code = in.readLine();
 
                     this.group_codes.remove(grp_name, grp_code); // Rimozione dal hashMap del gruppo
-                    System.out.println(ConsoleColors.MAGENTA_TEXT + "Uscito dal gruppo: " + grp_name + " riuscita" + ConsoleColors.BG_MAGENTA);
+                    System.out.println(ConsoleColors.MAGENTA_TEXT + "Uscito dal gruppo: " + grp_name + " riuscita" + ConsoleColors.RESET_TEXT);
                     break;    
 
                 case "CL_200": // Messaggio di conferma per il gruppo creato
