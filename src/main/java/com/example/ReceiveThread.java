@@ -99,8 +99,9 @@ public class ReceiveThread extends Thread {
                     break;    
 
                 case "CL_200": // Messaggio di conferma per il gruppo creato
-                    System.out.println(ConsoleColors.GREEN_TEXT + "Group Created" + ConsoleColors.RESET_TEXT);
-                    System.out.println("Enter /join_G@ group_name - username1, username2...... To add the users to the group");
+                    //System.out.println(ConsoleColors.GREEN_TEXT + "Group Created" + ConsoleColors.RESET_TEXT);
+                    System.out.println(ConsoleColors.GREEN_TEXT + "Gruppo creato" + ConsoleColors.RESET_TEXT); //c'è già RCV_200
+                    //System.out.println("Enter /join_G@ group_name - username1, username2...... To add the users to the group");
                     break;
 
                 case "SUCC_200": // Richiesta completata con successo
@@ -121,7 +122,8 @@ public class ReceiveThread extends Thread {
                     break;
 
                 case "ERROR_400": // Errore carattere non valido
-                    System.out.println(ConsoleColors.RED_TEXT + "Invalid Character present, RETRY" + ConsoleColors.RESET_TEXT);
+                    //System.out.println(ConsoleColors.RED_TEXT + "Invalid Character present, RETRY" + ConsoleColors.RESET_TEXT);
+                    System.out.println(ConsoleColors.RED_TEXT + "Carattere non valido, PROVARE UN'ALTRA VOLTA" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "ERROR_403": // Utente già presente
@@ -129,15 +131,18 @@ public class ReceiveThread extends Thread {
                     break;
 
                 case "ERROR_404": // Not found
-                    System.out.println(ConsoleColors.RED_TEXT + "- - ERROR - - REQUEST NOT FOUND" + ConsoleColors.RESET_TEXT);
+                    //System.out.println(ConsoleColors.RED_TEXT + "- - ERROR - - REQUEST NOT FOUND" + ConsoleColors.RESET_TEXT);
+                    System.out.println(ConsoleColors.RED_TEXT + "- - ERROR - - CORRISPONDENZA NON TROVATA" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "ERROR_404_G": // Gruppo not found
-                    System.out.println(ConsoleColors.RED_TEXT +"Group NOT FOUND" + ConsoleColors.RESET_TEXT);
+                    //System.out.println(ConsoleColors.RED_TEXT +"Group NOT FOUND" + ConsoleColors.RESET_TEXT);
+                    System.out.println(ConsoleColors.RED_TEXT +"Gruppi non trovati o non presenti" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "ERROR_404_P": // Chat not found
-                    System.out.println(ConsoleColors.RED_TEXT +"User NOT FOUND" + ConsoleColors.RESET_TEXT);
+                    //System.out.println(ConsoleColors.RED_TEXT + "User NOT FOUND" + ConsoleColors.RESET_TEXT);
+                    System.out.println(ConsoleColors.RED_TEXT + "Chat non trovato" + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "ERROR_405":
@@ -145,7 +150,8 @@ public class ReceiveThread extends Thread {
                     break;
 
                 case "ERROR_406": 
-                    System.out.println(ConsoleColors.RED_TEXT + "All available user added to the group" + ConsoleColors.RESET_TEXT);
+                    //System.out.println(ConsoleColors.RED_TEXT + "All available user added to the group" + ConsoleColors.RESET_TEXT);
+                    System.out.println(ConsoleColors.RED_TEXT + "Gruppo pieno" + ConsoleColors.RESET_TEXT);
                     break;
                 
                 case "ERROR_407": 
@@ -153,7 +159,8 @@ public class ReceiveThread extends Thread {
                     break;
 
                 case "ERROR_500":
-                    System.out.println(  ConsoleColors.RED_TEXT +"Internal Server Error" + ConsoleColors.RESET_TEXT);
+                    //System.out.println(  ConsoleColors.RED_TEXT +"Internal Server Error" + ConsoleColors.RESET_TEXT);
+                    System.out.println(  ConsoleColors.RED_TEXT +"Errore interno al server" + ConsoleColors.RESET_TEXT);
                     break;
 
                 default: 
@@ -194,6 +201,7 @@ public class ReceiveThread extends Thread {
         // Aggiungi all'HashMap il nome del gruppo e il suo relativo codice
         this.group_codes.put(group_name, group_code);
 
-        System.out.println("You have been added to the group: " + group_name);
+        //System.out.println("You have been added to the group: " + group_name);
+        System.out.println("Sei stato aggiunto nel gruppo: " + group_name);
     }
 }
