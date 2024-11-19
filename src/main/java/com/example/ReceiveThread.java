@@ -86,7 +86,7 @@ public class ReceiveThread extends Thread {
 
                     // HashMap contenente il nome del gruppo e il suo relativo codice
                     this.group_codes.put(group_name, group_code);
-                    System.out.println("Gruppo creato. Nome: " + group_name);
+                    System.out.println(ConsoleColors.GREEN_TEXT + "Nome del gruppo creato: " + group_name + ConsoleColors.RESET_TEXT);
                     break;
 
                 case "RMV_200":
