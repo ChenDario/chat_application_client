@@ -11,7 +11,6 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-
 public class Main {
 
     private static String username;
@@ -56,7 +55,7 @@ public class Main {
         scanner.close();
         socket.close();
         }catch (IOException e) { //gestisce l'eccezzione che avviene se il server non è attivo
-            System.err.println("Errore: Impossibile connettersi al server. Assicurati che sia attivo.");
+            System.err.println("Errore: Impossibile connettersi al server. Server chiuso.");
         }
     }
 
