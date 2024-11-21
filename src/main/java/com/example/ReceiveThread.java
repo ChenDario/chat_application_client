@@ -12,10 +12,10 @@ public class ReceiveThread extends Thread {
     private DataOutputStream out;
     private HashMap<String, String> group_codes;
     private volatile boolean running = true; 
-    private Encryption safe_message;
+    private EncryptionRSA safe_message;
     private HashMap<String, String> users_publickey;
 
-    public ReceiveThread(BufferedReader in, DataOutputStream out, HashMap<String, String> group_codes, Encryption safe_message, HashMap<String, String> users_key) {
+    public ReceiveThread(BufferedReader in, DataOutputStream out, HashMap<String, String> group_codes, EncryptionRSA safe_message, HashMap<String, String> users_key) {
         this.in = in;
         this.out = out;
         this.group_codes = group_codes;
@@ -59,6 +59,8 @@ public class ReceiveThread extends Thread {
     }
 
     public void status_codes(String server_response, BufferedReader in) {
+        System.out.println("Debug server_response: " + server_response);
+        
         try {
             String messaggio = "";
 
@@ -69,21 +71,25 @@ public class ReceiveThread extends Thread {
                     saveKey();
                     break;
 
-                case "RCV_100": // Ricezione del messaggio criptati
+                case "RCV_100": // Ricezione del messaggio da singolo
                     messaggio = in.readLine();
                     System.out.println(decrypt_message(messaggio));
                     break;
 
-                case "RCV_101": // Ricezione del dei messaggi non criptati
+                case "RCV_101": // Ricezione del messaggio da gruppo
                     messaggio = in.readLine();
-                    System.out.println(messaggio);
+                    System.out.println(decrypt_group_message(messaggio));
+                    break;
+
+                case "RCV_102": // Ricezione del messaggio broadcast
+                    messaggio = in.readLine();
+                    System.out.println(decrypt_broadcast_message(messaggio));
                     break;
 
                 case "RCV_200": // Conferma creazione di un gruppo
                     // Leggi il nome del gruppo e il codice per salvarli in una HashMap
                     String group_name = in.readLine();
-                    String group_code = in.readLine();
-
+                    String group_code = in.readLine(); 
                     // HashMap contenente il nome del gruppo e il suo relativo codice
                     this.group_codes.put(group_name, group_code);
                     System.out.println("Gruppo creato. Nome: " + group_name);
@@ -166,6 +172,28 @@ public class ReceiveThread extends Thread {
         }
     }
 
+    public String decrypt_broadcast_message(String messaggio) throws Exception{
+        //Estraggo il nome del gruppo e il contenuto del messaggio da decriptare
+        String[] parts = messaggio.split(":", 2);
+        String contenuto_messaggio = parts[1].trim();
+        String code = Main.broadcast_code;
+        String decrypted = EncryptionAES.decrypt(contenuto_messaggio, code);
+        return parts[0] + ": " + decrypted;
+    }
+
+    public String decrypt_group_message(String messaggio) throws Exception{
+        //Estraggo il nome del gruppo e il contenuto del messaggio da decriptare
+        String[] parts = messaggio.split(":", 2);
+        String group_name = parts[0].split(" ")[1];
+        String contenuto_messaggio = parts[1].trim();
+
+        String code = group_codes.get(group_name);
+
+        String decrypted_message = EncryptionAES.decrypt(contenuto_messaggio, code);
+
+        return parts[0] + ": " + decrypted_message;
+    }
+
     synchronized public void saveKey() throws IOException {
         String user = in.readLine();
         String key = in.readLine();
@@ -193,6 +221,10 @@ public class ReceiveThread extends Thread {
 
         // Aggiungi all'HashMap il nome del gruppo e il suo relativo codice
         this.group_codes.put(group_name, group_code);
+
+        //More sout for debug
+        System.out.println("Nome gruppo: " + group_name);
+        System.out.println("Codice: " + group_codes.get(group_name));
 
         System.out.println("You have been added to the group: " + group_name);
     }

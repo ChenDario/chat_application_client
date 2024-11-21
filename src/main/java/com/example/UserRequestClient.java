@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class UserRequestClient {
 
-    public static void user_input_request(DataOutputStream out, Scanner scan, HashMap<String, String> users_key,Encryption safe_message, HashMap<String, String> group_codes) throws IOException, InterruptedException {
+    public static void user_input_request(DataOutputStream out, Scanner scan, HashMap<String, String> users_key,EncryptionRSA safe_message, HashMap<String, String> group_codes) throws IOException, InterruptedException, Exception {
         Thread.sleep(500);
         String message = "";
         boolean sendMessage = true; 
@@ -22,7 +22,7 @@ public class UserRequestClient {
                 System.out.println(ConsoleColors.UNDERLINE + ConsoleColors.BOLD_TEXT +"Scrivi il numero corrispondente all' azione che vorresti fare: " + ConsoleColors.RESET_TEXT);
                 scelta = scan.nextLine();
 
-                message = handleRequest(scelta, scan, out, users_key, safe_message);
+                message = handleRequest(scelta, scan, out, users_key, safe_message, group_codes);
             } while (message == null);// in caso inserisca una stringa non valida ripetere il ciclo
 
             // Condizione di uscita
@@ -40,14 +40,14 @@ public class UserRequestClient {
         } while (sendMessage);
     }
 
-    private static String handleRequest(String scelta, Scanner scanner, DataOutputStream out, HashMap<String, String> users_key, Encryption safe_message) throws IOException {
+    private static String handleRequest(String scelta, Scanner scanner, DataOutputStream out, HashMap<String, String> users_key, EncryptionRSA safe_message, HashMap<String, String> group_codes) throws IOException, Exception {
         switch (scelta) {
             case "0":
                 return "exit";
             case "1":
                 return privateMessage(scanner, users_key, out, safe_message);
             case "2":
-                return groupMessage(scanner);
+                return groupMessage(scanner, group_codes);
             case "3":
                 return broadcastMessage(scanner);
             case "4":
@@ -111,13 +111,14 @@ public class UserRequestClient {
         return "/users_group " + gruppoEsistente;
     }    
 
-    private static String broadcastMessage(Scanner scanner){
+    private static String broadcastMessage(Scanner scanner) throws Exception{
         System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Scrivi il messaggio da inviare a tutti: " + ConsoleColors.RESET_TEXT);
         String messaggioTutti = scanner.nextLine();
-        return "@All " + messaggioTutti;
+        System.out.println("Debug BroadCast message: " + EncryptionAES.encrypt(messaggioTutti, Main.broadcast_code));
+        return "@All " + EncryptionAES.encrypt(messaggioTutti, Main.broadcast_code);
     }
 
-    private static String privateMessage(Scanner scanner, HashMap<String, String> users_key, DataOutputStream out, Encryption safe_message) throws IOException {
+    private static String privateMessage(Scanner scanner, HashMap<String, String> users_key, DataOutputStream out, EncryptionRSA safe_message) throws IOException {
         System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Scrivi il nome utente a cui inviare il messaggio:" + ConsoleColors.RESET_TEXT);
         String nomeUtenteEsistente = scanner.nextLine();
         findPublicKey(nomeUtenteEsistente, users_key, out);
@@ -134,7 +135,7 @@ public class UserRequestClient {
         //Se non ha la chiave la richiede al server
     }
 
-    private static String encrypt_message(String message, String user, HashMap<String, String> users_key, Encryption safe_message){
+    private static String encrypt_message(String message, String user, HashMap<String, String> users_key, EncryptionRSA safe_message){
         String public_key = users_key.get(user);
         if (public_key == null) {
             System.out.println(ConsoleColors.RED_TEXT + "Chiave pubblica non trovata per l'utente " + user + ConsoleColors.RESET_TEXT);
@@ -149,11 +150,19 @@ public class UserRequestClient {
         }
     }
 
-    private static String groupMessage(Scanner scanner) {
-        System.out.println( ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC +"Scrivi il nome del gruppo a cui inviare il messaggio:" + ConsoleColors.RESET_TEXT );
+    private static String groupMessage(Scanner scanner, HashMap<String, String> groupcodes) throws Exception {
+        System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC +"Scrivi il nome del gruppo a cui inviare il messaggio:" + ConsoleColors.RESET_TEXT );
         String nomeGruppo = scanner.nextLine();
         System.out.println(ConsoleColors.ITALIC +"Scrivi il messaggio:" + ConsoleColors.RESET_TEXT);
         String messaggio = scanner.nextLine();
+        try {
+            //Cifra il messaggio //C'è da fare il controllo del nome valido del gruppo
+            messaggio = EncryptionAES.encrypt(messaggio, groupcodes.get(nomeGruppo));    
+        } catch (Exception e) {
+            System.out.println("GROUP ERROR");
+            messaggio = null;
+        }
+        System.out.println("Debug Group message: " + messaggio);
         return "G@" + nomeGruppo + " " + messaggio;
     }
 

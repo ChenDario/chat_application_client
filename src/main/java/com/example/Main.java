@@ -1,6 +1,5 @@
 package com.example;
 
-//Riproduzione di tracce audio
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -12,13 +11,13 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
-
+    public static final String broadcast_code = "broadcasting3215";
     private static String username;
-    private static Encryption safe_message = new Encryption();
+    private static EncryptionRSA safe_message = new EncryptionRSA();
     private static HashMap<String, String> users_key = new HashMap<>();
     private static HashMap<String, String> group_codes = new HashMap<>();
 
-    public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
+    public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException, Exception {
         //Codici Gruppo non usati.args..
         try{
         Socket socket = new Socket("localhost", 3000);
@@ -34,7 +33,6 @@ public class Main {
         // Validazione della connessione tramite l'inserimento dell'usernamem
         Input_username name = new Input_username(scanner, in, out);
         username = name.input_username();
-
 
         //Generate public and private key
         create_keys(safe_message, out);
@@ -60,7 +58,7 @@ public class Main {
         }
     }
 
-    private static void create_keys(Encryption safe_message, DataOutputStream out) throws IOException{
+    private static void create_keys(EncryptionRSA safe_message, DataOutputStream out) throws IOException{
         //Generate private and public key
         safe_message.generateKeys(1024);
         String publicKey = safe_message.getPublicKey();

@@ -3,14 +3,14 @@ package com.example;
 import java.math.BigInteger;
 import java.util.Random;
 
-public class Encryption {
+public class EncryptionRSA {
     // Variables to store RSA keys
     private BigInteger e; // Public exponent (part of the public key)
     private BigInteger d; // Private exponent (part of the private key)
     private BigInteger n; // Modulus common to both public and private keys
 
     // Empty constructor for the Encryption class
-    public Encryption() {
+    public EncryptionRSA() {
     }
 
     // Method to generate RSA keys
