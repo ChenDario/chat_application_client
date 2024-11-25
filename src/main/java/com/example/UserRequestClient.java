@@ -29,10 +29,10 @@ public class UserRequestClient {
             if (message.equalsIgnoreCase("exit")) {
                 System.out.println(ConsoleColors.YELLOW_TEXT + "Disconnessione..." + ConsoleColors.RESET_TEXT);
                 sendMessage = false;
-            } else {
-                // Invia il messaggio al server
-                out.writeBytes(message + "\n");
             }
+            
+            // Invia il messaggio al server
+            out.writeBytes(message + "\n");
 
             // Questo sleep permette di far eseguire la richiesta e farla stampare prima che
             // ricominci il loop (cosa puramente visiva)
@@ -160,7 +160,7 @@ public class UserRequestClient {
             messaggio = EncryptionAES.encrypt(messaggio, groupcodes.get(nomeGruppo));    
         } catch (Exception e) {
             System.out.println("GROUP ERROR");
-            messaggio = null;
+            messaggio = "null";
         }
         //System.out.println("Debug Group message: " + messaggio);
         return "G@" + nomeGruppo + " " + messaggio;
