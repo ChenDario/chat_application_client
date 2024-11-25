@@ -114,7 +114,7 @@ public class UserRequestClient {
     private static String broadcastMessage(Scanner scanner) throws Exception{
         System.out.println(ConsoleColors.BOLD_TEXT + ConsoleColors.ITALIC + "Scrivi il messaggio da inviare a tutti: " + ConsoleColors.RESET_TEXT);
         String messaggioTutti = scanner.nextLine();
-        System.out.println("Debug BroadCast message: " + EncryptionAES.encrypt(messaggioTutti, Main.broadcast_code));
+      //  System.out.println("Debug BroadCast message: " + EncryptionAES.encrypt(messaggioTutti, Main.broadcast_code));
         return "@All " + EncryptionAES.encrypt(messaggioTutti, Main.broadcast_code);
     }
 
@@ -162,7 +162,7 @@ public class UserRequestClient {
             System.out.println("GROUP ERROR");
             messaggio = null;
         }
-        System.out.println("Debug Group message: " + messaggio);
+        //System.out.println("Debug Group message: " + messaggio);
         return "G@" + nomeGruppo + " " + messaggio;
     }
 

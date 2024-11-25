@@ -59,7 +59,7 @@ public class ReceiveThread extends Thread {
     }
 
     public void status_codes(String server_response, BufferedReader in) {
-        System.out.println("Debug server_response: " + server_response);
+       // System.out.println("Debug server_response: " + server_response);
         
         try {
             String messaggio = "";
@@ -164,7 +164,7 @@ public class ReceiveThread extends Thread {
 
                 default: 
                     System.out.println("- - ERROR PROCESSING THE RESPONSE FROM THE SERVER - - ");
-                    System.out.println("Server: " + server_response); // Debug
+                    //System.out.println("Server: " + server_response); // Debug
                     break;
             }
         } catch (Exception e) {
@@ -223,9 +223,9 @@ public class ReceiveThread extends Thread {
         this.group_codes.put(group_name, group_code);
 
         //More sout for debug
-        System.out.println("Nome gruppo: " + group_name);
-        System.out.println("Codice: " + group_codes.get(group_name));
+        //System.out.println("Nome gruppo: " + group_name);
+        //System.out.println("Codice: " + group_codes.get(group_name));
 
-        System.out.println("You have been added to the group: " + group_name);
+      System.out.println("You have been added to the group: " + group_name);
     }
 }
